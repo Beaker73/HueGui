@@ -1,6 +1,5 @@
 import React from "react";
-import { Address4 } from "ip-address";
-import { DetailsList, IColumn, SelectionMode, IconButton, DetailsListLayoutMode, Stack, DefaultButton } from "@fluentui/react";
+import { DetailsList, IColumn, SelectionMode, DefaultButton } from "@fluentui/react";
 import { Blade } from "@beaker73/fluentui-blades";
 
 import { useBridgeDiscovery, DiscoveredBridge } from "../Hooks/Discover";

@@ -40,7 +40,7 @@ export function useBridgeDiscovery(): DiscoveredBridges {
 		gretch<HueBridgeResponse[]>("https://discovery.meethue.com/")
 			.json()
 			.then(response => {
-				if (response.status == 200 && response.data && Array.isArray(response.data)) {
+				if (response.status === 200 && response.data && Array.isArray(response.data)) {
 					for (const bridge of response.data)
 						getConfig(bridge.internalipaddress);
 				}
@@ -51,7 +51,7 @@ export function useBridgeDiscovery(): DiscoveredBridges {
 
 	async function getConfig(ip: string) {
 		const response = await gretch<HueConfigurationResponse>(`http://${ip}/api/configuration`).json();
-		if (response.status == 200 && response.data) {
+		if (response.status === 200 && response.data) {
 			setBridges(bridges => [...bridges,
 			{
 				id: response.data.bridgeid,
