@@ -28,7 +28,7 @@ export function Field(props: PropsWithChildren<FieldProps>): JSX.Element {
     function renderSubLabel(): JSX.Element | undefined {
         if(props.url)
             return <>&nbsp;
-                <a href={props.url} target="_blank">{render()}</a>
+                <a href={props.url} target="_blank" rel="noopener noreferrer">{render()}</a>
             </>;
         return <>&nbsp;{render()}</>;
 

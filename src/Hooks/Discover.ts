@@ -119,7 +119,7 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 					setIsConnected(true);
 				}
 			});
-	}, [tryNumber]);
+	}, [tryNumber, addBridge, bridge.id, bridge.ip, bridge.name, clientId]);
 
 	return {
 		isConnected,

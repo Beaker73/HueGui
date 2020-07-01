@@ -1,4 +1,4 @@
-import { createStore, createTypedHooks, createTransform, persist } from "easy-peasy";
+import { createStore, createTypedHooks, persist } from "easy-peasy";
 
 import { bridgeState, BridgeStore } from "./BridgeStore";
 
