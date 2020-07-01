@@ -1,11 +1,13 @@
 import React from "react";
 import { DetailsList, IColumn, SelectionMode, DefaultButton } from "@fluentui/react";
-import { Blade } from "@beaker73/fluentui-blades";
+import { Blade, useBlade } from "@beaker73/fluentui-blades";
 
 import { useBridgeDiscovery, DiscoveredBridge } from "../Hooks/Discover";
+import { ConnectBlade } from "./ConnectBlade";
 
 export function BridgesBlade(): JSX.Element {
 
+	const { openBlade } = useBlade();
 	const { bridges } = useBridgeDiscovery();
 
 	const columns: IColumn[] = [
@@ -23,6 +25,10 @@ export function BridgesBlade(): JSX.Element {
 	}
 
 	function renderConnectButton(bridge: DiscoveredBridge) {
-		return <DefaultButton iconProps={{ iconName: "PlugDisconnected" }}>Connect</DefaultButton>
+		return <DefaultButton iconProps={{ iconName: "PlugDisconnected" }} onClick={() => openConnectBlade(bridge)}>Connect</DefaultButton>
+	}
+
+	function openConnectBlade(bridge: DiscoveredBridge) {
+		return openBlade(ConnectBlade, { bridge });
 	}
 }

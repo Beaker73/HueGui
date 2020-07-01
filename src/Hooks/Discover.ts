@@ -64,3 +64,17 @@ export function useBridgeDiscovery(): DiscoveredBridges {
 		}
 	}
 }
+
+export interface ConnectToBridgeState {
+	isConnected: boolean, 
+	secondsLeft: number,
+}
+
+export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeState {
+
+	return { 
+		isConnected: false,
+		secondsLeft: 30,
+	};
+
+}
