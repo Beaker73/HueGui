@@ -21,7 +21,7 @@ export function BridgesBlade(): JSX.Element {
 	</Blade>;
 
 	function renderAddress(bridge: DiscoveredBridge) {
-		return bridge.ip.address;
+		return bridge.ip;
 	}
 
 	function renderConnectButton(bridge: DiscoveredBridge) {

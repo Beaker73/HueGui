@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { StoreProvider } from 'easy-peasy';
 import { initializeIcons, registerIcons } from '@fluentui/react';
+
+import { store } from "./Store";
+import * as serviceWorker from './serviceWorker';
 
 import App from './App';
 import { HueIcon } from './Components/HueIcon';
 
-import * as serviceWorker from './serviceWorker';
 
 initializeIcons();
 registerIcons({
@@ -16,7 +19,9 @@ registerIcons({
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<StoreProvider store={store}>
+			<App />
+		</StoreProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

@@ -1,11 +1,11 @@
-import { Address4 } from "ip-address";
 import { gretch } from "gretchen";
 import { useEffect, useState } from "react";
+import { useStoreState, useStoreActions } from "../Store";
 
 export interface DiscoveredBridge {
 	id: string;
 	name: string;
-	ip: Address4;
+	ip: string;
 	mac: string;
 	modelid: string;
 }
@@ -56,7 +56,7 @@ export function useBridgeDiscovery(): DiscoveredBridges {
 			{
 				id: response.data.bridgeid,
 				name: response.data.name,
-				ip: new Address4(ip),
+				ip,
 				mac: response.data.mac,
 				modelid: response.data.modelid,
 			}
@@ -66,15 +66,59 @@ export function useBridgeDiscovery(): DiscoveredBridges {
 }
 
 export interface ConnectToBridgeState {
-	isConnected: boolean, 
-	secondsLeft: number,
+	isConnected: boolean,
+	user?: string,
+}
+
+export interface HueUserResponse {
+	success: {
+		username: string;
+	}
 }
 
 export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeState {
 
-	return { 
-		isConnected: false,
-		secondsLeft: 30,
+	const clientId = useStoreState(store => store.bridges.clientId);
+	const addBridge = useStoreActions(store => store.bridges.addBridge);
+
+	const [tryNumber, setTryNumber] = useState(0);
+	const [isConnected, setIsConnected] = useState(false);
+
+	// timer to send request every 5 seconds
+	// until button is pressed...
+	useEffect(() => {
+		if (!isConnected) {
+			const handle = window.setInterval(() => setTryNumber(n => n + 1), 5000);
+			return () => window.clearInterval(handle);
+		}
+	}, [isConnected])
+
+	// requests the bridge for a user
+	useEffect(() => {
+
+		gretch<HueUserResponse[]>(`http://${bridge.ip}/api`, {
+			method: "POST",
+			body: JSON.stringify({
+				"devicetype": `huegui#${clientId}`
+			})
+		}).json()
+			.then(response => {
+				if (response.status === 200 && response.data && response.data.length > 0 && response.data[0].success) {
+					addBridge({
+						bridge: {
+							id: bridge.id,
+							ip: bridge.ip,
+							name: bridge.name,
+							userName: response.data[0].success.username
+						}
+					});
+					setIsConnected(true);
+				}
+			});
+	}, [tryNumber]);
+
+	return {
+		isConnected,
 	};
 
 }

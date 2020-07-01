@@ -2,10 +2,17 @@ import React from "react";
 import { Fabric, CommandBar, Stack, mergeStyleSets, getTheme } from "@fluentui/react";
 import { BladeHost } from "@beaker73/fluentui-blades";
 
-import "./styles.css";
 import { RootBlade } from "./Blades/RootBlade";
 
+import "./styles.css";
+import { useStoreActions, useStoreState } from "./Store";
+
 function App(): JSX.Element {
+
+	const clientId = useStoreState(state => state.bridges.clientId);
+	const initializeClientId = useStoreActions(store => store.bridges.initializeClientId);
+	if(!clientId)
+		initializeClientId();
 
 	const theme = getTheme();
 	const style = getStyle();
@@ -16,7 +23,7 @@ function App(): JSX.Element {
 				<CommandBar items={[]} farItems={[]} />
 			</Stack.Item>
 			<Stack.Item grow={1} className={style.bladeHost} >
-				<BladeHost className={style.bladeHost} root={{bladeType: RootBlade, bladeProps: {}}} />
+				<BladeHost className={style.bladeHost} root={{ bladeType: RootBlade, bladeProps: {} }} />
 			</Stack.Item>
 		</Stack>
 	</Fabric>
