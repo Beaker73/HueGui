@@ -87,6 +87,7 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 	// timer to send request every 5 seconds
 	// until button is pressed...
 	useEffect(() => {
+		// if not connected yet, setup interval
 		if (!isConnected) {
 			const handle = window.setInterval(() => setTryNumber(n => n + 1), 5000);
 			return () => window.clearInterval(handle);
@@ -94,6 +95,7 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 	}, [isConnected])
 
 	// requests the bridge for a user
+	// on every try number increment (5 sec.)
 	useEffect(() => {
 
 		gretch<HueUserResponse[]>(`http://${bridge.ip}/api`, {
@@ -103,7 +105,9 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 			})
 		}).json()
 			.then(response => {
+				// check if success, ignore otherwise, there will be a new request in 5 sec.
 				if (response.status === 200 && response.data && response.data.length > 0 && response.data[0].success) {
+					// oke? then user pressed button, store the bridge
 					addBridge({
 						bridge: {
 							id: bridge.id,
