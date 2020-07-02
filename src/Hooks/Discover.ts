@@ -1,6 +1,8 @@
 import { gretch } from "gretchen";
 import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../Store";
+import { useBlade } from "@beaker73/fluentui-blades";
+import { BridgesBlade } from "../Blades/BridgesBlade";
 
 export interface DiscoveredBridge {
 	id: string;
@@ -124,5 +126,18 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 	return {
 		isConnected,
 	};
+
+}
+
+/** When no bridges configured, redirect to the Bridges Blade */
+export function useRedirectWhenNoBridge() {
+
+	const { openBlade } = useBlade();
+	const bridgeCount = useStoreState(state => Object.values(state.bridges.all).length);
+
+	useEffect(() => {
+		if (bridgeCount === 0)
+			openBlade(BridgesBlade);
+	}, [bridgeCount, openBlade]);
 
 }

@@ -13,7 +13,7 @@ import { HueIcon } from './Components/HueIcon';
 initializeIcons();
 registerIcons({
 	icons: {
-		Bridge: <HueIcon />
+		Bridge: <HueIcon iconName="Bridge" />
 	}
 });
 
