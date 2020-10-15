@@ -13,7 +13,9 @@ import { HueIcon } from './Components/HueIcon';
 initializeIcons();
 registerIcons({
 	icons: {
-		Bridge: <HueIcon iconName="Bridge" />
+		Bridge: <HueIcon iconName="Bridge" />,
+		Room: <HueIcon iconName="Room" />,
+		Bulb: <HueIcon iconName="Bub" />,
 	}
 });
 

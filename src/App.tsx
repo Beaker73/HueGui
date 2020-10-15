@@ -1,6 +1,8 @@
 import React from "react";
 import { Fabric, Stack, mergeStyleSets, getTheme } from "@fluentui/react";
 import { BladeHost, BladeList } from "@beaker73/fluentui-blades";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend"
 
 import { useStoreActions, useStoreState } from "./Store";
 
@@ -20,18 +22,20 @@ function App(): JSX.Element {
 	const style = getStyle();
 
 	return <Fabric className="full-page">
-		<BladeHost>
-			<Stack className="full-page">
-				<Stack.Item grow={0} className={style.menuBar} >
-					<Menu />
-				</Stack.Item>
-				<Stack.Item grow={1} className={style.bladeHost} >
-					<BladeList>
-						<DashboardBlade />
-					</BladeList>
-				</Stack.Item>
-			</Stack>
-		</BladeHost>
+		<DndProvider backend={HTML5Backend}>
+			<BladeHost>
+				<Stack className="full-page">
+					<Stack.Item grow={0} className={style.menuBar} >
+						<Menu />
+					</Stack.Item>
+					<Stack.Item grow={1} className={style.bladeHost} >
+						<BladeList>
+							<DashboardBlade />
+						</BladeList>
+					</Stack.Item>
+				</Stack>
+			</BladeHost>
+		</DndProvider>
 	</Fabric>
 
 	function getStyle() {

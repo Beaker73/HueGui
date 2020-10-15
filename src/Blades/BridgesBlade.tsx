@@ -51,6 +51,5 @@ export function BridgesBlade(): JSX.Element {
 }
 
 function isConnected(bridge: Bridge | DiscoveredBridge): bridge is Bridge {
-	console.log({ bridge });
 	return !!((bridge as Bridge).userName);
 }

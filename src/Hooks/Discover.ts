@@ -133,11 +133,13 @@ export function useConnectToBridge(bridge: DiscoveredBridge): ConnectToBridgeSta
 export function useRedirectWhenNoBridge() {
 
 	const { openBlade } = useBlade();
-	const bridgeCount = useStoreState(state => Object.values(state.bridges.all).length);
+	const bridgeCount = useStoreState(state => state.bridges.bridgeCount);
 
 	useEffect(() => {
-		if (bridgeCount === 0)
+		if (bridgeCount === 0) {
+			console.warn("no bridges found, redirect to bridge blade");
 			openBlade(BridgesBlade);
-	}, [bridgeCount, openBlade]);
+		}
+	}, [bridgeCount]);
 
 }
