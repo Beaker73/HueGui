@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CommandBar, ICommandBarItemProps, ContextualMenuItemType, Text, Stack, mergeStyleSets, getTheme } from "@fluentui/react";
 import { useBlade } from "@beaker73/fluentui-blades";
 
 import { BridgesBlade } from "../Blades/BridgesBlade";
 import { RoomsBlade } from "../Blades/RoomsBlade";
 import { LightsBlade } from "../Blades/LightsBlade";
+import { useWindowSize } from "../Hooks/Browser";
 
 export function Menu(): JSX.Element {
 
@@ -13,18 +14,22 @@ export function Menu(): JSX.Element {
 
 	const { openBlade } = useBlade();
 
+	const [width] = useWindowSize();
+	const isSmall = width < 800;
+	const isTiny = width < 450;
+
 	const items: ICommandBarItemProps[] = [
 		{ key: "title", name: "HueGui", itemType: ContextualMenuItemType.Header, onRender: renderTitle },
-		{ key: "rooms", name: "Rooms", iconProps: { iconName: "Room" }, onClick: openRoomsBlade },
-		{ key: "lights", name: "Lights", iconProps: { iconName: "Light" }, onClick: openLightsBlade },
+		{ key: "rooms", name: "Rooms", iconOnly: isTiny, iconProps: { iconName: "Room" }, onClick: openRoomsBlade },
+		{ key: "lights", name: "Lights", iconOnly: isTiny, iconProps: { iconName: "Light" }, onClick: openLightsBlade },
 	];
 
 	const farItems: ICommandBarItemProps[] = [
-		{ key: "bridges", name: "Bridges", iconProps: { iconName: "Bridge" }, onClick: openBridgesBlade },
+		{ key: "bridges", name: "Bridges", iconOnly: isSmall, iconProps: { iconName: "Bridge" }, onClick: openBridgesBlade },
 		{ key: "settings", iconOnly: true, iconProps: { iconName: "Settings" } },
 	];
 
-	return <CommandBar items={items} farItems={farItems} />
+	return <CommandBar items={items} farItems={farItems} />;
 
 	function openBridgesBlade() {
 		openBlade(BridgesBlade);

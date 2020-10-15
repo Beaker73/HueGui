@@ -1,2 +1,1 @@
-export * from "./Bridge";
-export * from "./Room";
+export * from "./Store";

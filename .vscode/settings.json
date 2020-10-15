@@ -1,0 +1,13 @@
+{
+    
+    "editor.tabSize": 4,
+    "editor.useTabStops": true,
+
+    "jest.autoEnable": true,
+    "jest.enableCodeLens": true,
+    "jest.enableInlineErrorMessages": true,
+    "jest.debugCodeLens.showWhenTestStateIn": [
+        "fail"
+    ]
+
+}

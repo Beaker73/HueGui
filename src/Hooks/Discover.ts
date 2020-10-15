@@ -136,8 +136,9 @@ export function useRedirectWhenNoBridge() {
 	const bridgeCount = useStoreState(state => state.bridges.bridgeCount);
 
 	useEffect(() => {
+		console.log(`bridge count: ${bridgeCount}`);
 		if (bridgeCount === 0) {
-			console.warn("no bridges found, redirect to bridge blade");
+			console.warn(`no bridges found (${bridgeCount}), redirect to bridge blade`);
 			openBlade(BridgesBlade);
 		}
 	}, [bridgeCount]);
