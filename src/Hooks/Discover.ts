@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useStoreState, useStoreActions } from "../Store";
 import { useBlade } from "@beaker73/fluentui-blades";
 import { BridgesBlade } from "../Blades/BridgesBlade";
+import { useInterval } from ".";
 
 export interface DiscoveredBridge {
 	id: string;
@@ -134,13 +135,11 @@ export function useRedirectWhenNoBridge() {
 
 	const { openBlade } = useBlade();
 	const bridgeCount = useStoreState(state => state.bridges.bridgeCount);
+	const tickNo = useInterval(500, 1);
 
 	useEffect(() => {
-		console.log(`bridge count: ${bridgeCount}`);
-		if (bridgeCount === 0) {
-			console.warn(`no bridges found (${bridgeCount}), redirect to bridge blade`);
+		if (bridgeCount === 0 && tickNo === 1)
 			openBlade(BridgesBlade);
-		}
-	}, [bridgeCount]);
+	}, [bridgeCount, tickNo]);
 
 }

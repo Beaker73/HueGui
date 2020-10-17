@@ -1,4 +1,4 @@
-export enum ColourMode {
+export enum ColorMode {
     HueSaturation = "hs",
     XY = "xy",
     Kelvin = "ct"

@@ -25,7 +25,7 @@ export function useWindowSize(): Size {
  * Ensures state refresh every provided interval
  * @param msec The number of msec between each interval
  */
-export function useInterval(msec: number | undefined): number {
+export function useInterval(msec: number | undefined, maxTick?: number): number {
     const [intervalNumber, setIntervalNumber] = useState(0);
 
     useEffect(() => {
@@ -36,9 +36,13 @@ export function useInterval(msec: number | undefined): number {
         return () => window.clearInterval(handle);
 
         function handleInterval() {
-            setIntervalNumber(i => i + 1);
+            setIntervalNumber(i => {
+                if (maxTick && maxTick === i + 1)
+                    window.clearInterval(handle);
+                return i + 1
+            });
         }
-    }, [msec]);
+    }, [msec, maxTick]);
 
     return intervalNumber;
 }

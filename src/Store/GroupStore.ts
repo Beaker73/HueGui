@@ -28,27 +28,27 @@ export const groupState: GroupStore = {
 
 	// action implementations
 	mergeGroups: action((state, groups) => {
-		for(const [id, group] of Object.entries(groups)) {
+		for (const [id, group] of Object.entries(groups)) {
 			state.all[id] = group;
 		}
 	}),
 
 	// thunk implementations
-	refreshAllGroups: thunk(async ({mergeGroups}, payload, { getStoreState }) => {
+	refreshAllGroups: thunk(async ({ mergeGroups }, payload, { getStoreState }) => {
 		var rootState = getStoreState() as RootStore;
 
 		const bridge = Object.values(rootState.bridges.all).shift();
-		if(bridge) {
+		if (bridge) {
 			const api = getHueApi(bridge);
 			const apiGroups = await api.groups.getAll();
 
 			const groups = Object.fromEntries(
 				Object.entries(apiGroups)
-					.map(([id, group]) => [id, groupConverter.toStoreModel(group)])
+					.map(([id, group]) => [id, groupConverter.toStoreModel(group, { id: parseInt(id) })])
 			);
 
 			mergeGroups(groups);
 		}
-		
+
 	}),
 }

@@ -1,5 +1,5 @@
 
 export enum LightEffect {
     None = "none",
-    ColourLoop = "colorloop"
+    ColorLoop = "colorloop"
 }

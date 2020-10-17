@@ -1,29 +1,32 @@
 import { Group, GroupType } from "../../Store";
-import { ModelConverter } from "../../ModelConverter";
-import { ApiLightAction, lightActionConverter } from "../Lights";
+import { ModelConverter, NumberIdConvertProps } from "../../ModelConverter";
+import { ApiLightState } from "../Lights";
+import { ApiGroupState, groupStateConverter } from "./ApiGroupState";
 
 export interface ApiGroup {
     name: string;
-    lights: number[];
+    lights: string[];
     type: GroupType,
-    action: ApiLightAction;
+    action?: ApiLightState;
+    state: ApiGroupState;
 }
 
-export const groupConverter: ModelConverter<ApiGroup, Group> = {
-    toStoreModel: (apiGroup: ApiGroup): Group => {
+export const groupConverter: ModelConverter<ApiGroup, Group, NumberIdConvertProps> = {
+    toStoreModel: (apiGroup, props) => {
         return {
+            id: props.id,
             name: apiGroup.name,
-            lights: apiGroup.lights,
+            lights: apiGroup.lights?.map(id => parseInt(id)) ?? [],
             type: apiGroup.type,
-            action: lightActionConverter.toStoreModel(apiGroup.action),
+            state: groupStateConverter.toStoreModel(apiGroup.state),
         };
     },
-    toApiModel: (group: Group): ApiGroup => {
+    toApiModel: group => {
         return {
             name: group.name,
-            lights: group.lights,
+            lights: group.lights.map(id => id.toString()),
             type: group.type,
-            action: lightActionConverter.toApiModel(group.action),
+            state: groupStateConverter.toApiModel(group.state),
         }
     }
 }

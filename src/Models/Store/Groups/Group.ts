@@ -1,9 +1,10 @@
 import { GroupType } from "./GroupType";
-import { LightAction } from "../Lights";
+import { GroupState } from "./GroupState";
 
 export interface Group {
+    id: number;
     name: string;
     lights: number[];
     type: GroupType,
-    action: LightAction;
+    state: GroupState;
 }

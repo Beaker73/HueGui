@@ -8,6 +8,10 @@ export class Brightness {
         this._value = clamp(value, 0, 1);
     }
 
+    public get value(): number {
+        return this._value;
+    }
+
     public static fromJson(value: number): Brightness {
         return new Brightness(clamp(value, 1, 254) / 254);
     }

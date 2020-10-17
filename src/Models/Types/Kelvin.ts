@@ -1,5 +1,3 @@
-import { clamp } from "@fluentui/react";
-
 export class Kelvin {
 
     private _value: number;

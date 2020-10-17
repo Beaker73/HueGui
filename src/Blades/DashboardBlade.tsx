@@ -4,8 +4,6 @@ import { Dashboard, DashboardTileProps, DashboardTileDefinitionProps } from "@be
 
 import { useRedirectWhenNoBridge } from "../Hooks/Discover";
 
-import { Tile } from "../Components/Tile";
-
 export function DashboardBlade(): JSX.Element {
 
 	useRedirectWhenNoBridge();
@@ -14,7 +12,7 @@ export function DashboardBlade(): JSX.Element {
 		{ name: "light", title: "Tafel", width: 2, height: 1 }
 	];
 
-	const [tileProps, setTileProps] = useState<readonly DashboardTileProps[]>([
+	const [tileProps] = useState<readonly DashboardTileProps[]>([
 		{ id: "banaan", definition: definitions[0] }
 	]);
 	const tiles: JSX.Element[] = tileProps.map(p => {

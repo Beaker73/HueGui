@@ -2,15 +2,18 @@ import { createStore, createTypedHooks, persist } from "easy-peasy";
 
 import { bridgeState, BridgeStore } from "./BridgeStore";
 import { groupState, GroupStore } from "./GroupStore";
+import { lightState, LightStore } from "./LightStore";
 
 export interface RootStore {
 	bridges: BridgeStore;
-	rooms: GroupStore;
+	groups: GroupStore;
+	lights: LightStore;
 }
 
 const rootState: RootStore = {
 	bridges: bridgeState,
-	rooms: groupState,
+	groups: groupState,
+	lights: lightState,
 }
 
 // export const store = createStore(rootState);

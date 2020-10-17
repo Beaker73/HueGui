@@ -1,10 +1,11 @@
 import { gretch } from "gretchen";
 import { Dictionary } from "../Helpers";
-import { ApiGroup } from "../Models/HueApi";
+import { ApiGroup, ApiLight } from "../Models/HueApi";
 import { Bridge } from "../Models/Store";
 
 export interface HueApi {
     groups: HueApiGroups;
+    lights: HueApiLights;
 }
 
 export interface HueApiGroups {
@@ -12,9 +13,15 @@ export interface HueApiGroups {
     getById(id: string): Promise<ApiGroup | undefined>;
 }
 
+export interface HueApiLights {
+    getAll(): Promise<Dictionary<ApiLight>>;
+    getById(id: string): Promise<ApiLight | undefined>;
+}
+
 export function getHueApi(bridge: Bridge): HueApi {
     return {
         groups: getHueApiGroups(),
+        lights: getHueApiLights(),
     }
 
     function getHueApiGroups() {
@@ -29,6 +36,21 @@ export function getHueApi(bridge: Bridge): HueApi {
 
         async function getById(id: string): Promise<ApiGroup | undefined> {
             return await get<ApiGroup>(`groups/${id}`);
+        }
+    }
+
+    function getHueApiLights() {
+        return {
+            getAll, 
+            getById,
+        }
+
+        async function getAll(): Promise<Dictionary<ApiLight>> {
+            return await get<Dictionary<ApiLight>>("lights");
+        }
+
+        async function getById(id: string): Promise<ApiLight | undefined> {
+            return await get<ApiLight>(`lights/${id}`);
         }
     }
 
