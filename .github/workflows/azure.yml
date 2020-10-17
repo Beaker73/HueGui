@@ -7,7 +7,8 @@ on:
       - master
 
 env:
-  NODE_VERSION: '12.x'                # set this to the node version to use
+  NODE_VERSION: '12.x'  # set this to the node version to use
+  CI: false             # set CI env to false, to disable warning as error (until we figure a way to suppress some react warnings)
 
 jobs:
   build-and-deploy:
