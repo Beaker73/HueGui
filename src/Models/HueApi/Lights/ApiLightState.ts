@@ -1,4 +1,3 @@
-import { ModelConverter } from "../../ModelConverter";
 import { LightState, LightAlert, LightEffect, ColorMode } from "../../Store";
 import { Hue, Saturation, Brightness, Kelvin } from "../../Types";
 
@@ -15,7 +14,7 @@ export interface ApiLightState {
     reachable?: boolean,
 }
 
-export const lightStateConverter: ModelConverter<ApiLightState, LightState> = {
+export const lightStateConverter = {
     toStoreModel: (apiAction: ApiLightState): LightState => {
         return {
             isOn: apiAction.on,
@@ -30,17 +29,28 @@ export const lightStateConverter: ModelConverter<ApiLightState, LightState> = {
             isReachable: apiAction.reachable,
         };
     },
-    toApiModel: (action: LightState): ApiLightState => {
-        return {
-            on: action.isOn,
-            bri: action.brightness?.toJson(),
-            colormode: action.colorMode,
-            hue: action.hue?.toJson(),
-            sat: action.saturation?.toJson(),
-            xy: action.xy,
-            ct: action.kelvin?.toJson(),
-            alert: action.alert,
-            effect: action.effect,
-        };
+    toApiModel: (action: Partial<LightState>): Partial<ApiLightState> => {
+        const api: Partial<ApiLightState> = {};
+
+        if ("isOn" in action)
+            api["on"] = action.isOn;
+        if ("brightness" in action)
+            api["bri"] = action.brightness?.toJson();
+        if ("colorMode" in action)
+            api["colormode"] = action.colorMode;
+        if ("hue" in action)
+            api["hue"] = action.hue?.toJson();
+        if ("saturation" in action)
+            api["sat"] = action.saturation?.toJson();
+        if ("xy" in action)
+            api["xy"] = action.xy;
+        if ("kelvin" in action)
+            api["ct"] = action.kelvin?.toJson();
+        if ("alert" in action)
+            api["alert"] = action.alert;
+        if ("effect" in action)
+            api["effect"] = action.effect;
+
+        return api;
     }
 }

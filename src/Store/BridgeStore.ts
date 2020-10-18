@@ -10,6 +10,7 @@ export interface BridgeStore {
 	clientId: string | null;
 
 	// computed state
+	getById: Computed<BridgeStore, (id: string) => Bridge | undefined>;
 	bridgeCount: Computed<BridgeStore, number>;
 
 	// actions
@@ -23,6 +24,7 @@ export const bridgeState: BridgeStore = {
 	clientId: null,
 
 	// computed state implementations
+	getById: computed(state => id => state.all[id]),
 	bridgeCount: computed(state => Object.values(state.all).length),
 
 	// action implementations

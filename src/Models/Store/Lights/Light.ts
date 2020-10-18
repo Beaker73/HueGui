@@ -1,7 +1,11 @@
 import { LightState } from "./LightState";
 
 export interface Light {
-    id: number;
+    
+    bridgeId: string;
+    lightId: string;
+    key: string;
+
     state: LightState;
     type: string;
     name: string;

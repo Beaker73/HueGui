@@ -1,5 +1,4 @@
 import { Group, GroupType } from "../../Store";
-import { ModelConverter, NumberIdConvertProps } from "../../ModelConverter";
 import { ApiLightState } from "../Lights";
 import { ApiGroupState, groupStateConverter } from "./ApiGroupState";
 
@@ -11,23 +10,20 @@ export interface ApiGroup {
     state: ApiGroupState;
 }
 
-export const groupConverter: ModelConverter<ApiGroup, Group, NumberIdConvertProps> = {
-    toStoreModel: (apiGroup, props) => {
+export const groupConverter = {
+    toStoreModel: (apiGroup: ApiGroup, props: { bridgeId: string, groupId: string }): Group => {
+        const { bridgeId, groupId } = props;
         return {
-            id: props.id,
+
+            bridgeId,
+            groupId,
+            key: bridgeId + ":" + groupId,
+
             name: apiGroup.name,
-            lights: apiGroup.lights?.map(id => parseInt(id)) ?? [],
+            lightKeys: apiGroup.lights?.map(id => bridgeId + ":" + id) ?? [],
             type: apiGroup.type,
             state: groupStateConverter.toStoreModel(apiGroup.state),
         };
     },
-    toApiModel: group => {
-        return {
-            name: group.name,
-            lights: group.lights.map(id => id.toString()),
-            type: group.type,
-            state: groupStateConverter.toApiModel(group.state),
-        }
-    }
 }
 

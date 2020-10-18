@@ -11,10 +11,12 @@ export function RoomsBlade(): JSX.Element {
     const rooms = useGroups(GroupType.Room);
     const blade = useBlade();
 
+    console.log({rooms});
+
     const columns: IColumn[] = [
         { key: "state", name: "On", fieldName: "isOn", minWidth: 50, onRender: renderState },
         { key: "name", name: "Name", fieldName: "name", minWidth: 150 },
-        { key: "lights", name: "Lights", minWidth: 50, onRender: r => (<>{r.lights.length}</>) },
+        { key: "lights", name: "Lights", minWidth: 50, onRender: (r: Group) => (<>{r.lightKeys.length}</>) },
     ]
 
     return <Blade title="Rooms">
@@ -28,6 +30,6 @@ export function RoomsBlade(): JSX.Element {
     }
 
     function openLightsForGroup(item: Group) {
-        blade.openBlade(LightsBlade, { lightIds: item.lights });
+        blade.openBlade(LightsBlade, { title: `Lights in ${item.name}`, lightKeys: item.lightKeys });
     }
 }

@@ -1,9 +1,9 @@
 import { Group, GroupType } from "../Models";
 import { Dictionary, filterDictionary } from "../Helpers";
 import { action, Action, computed, Computed, thunk, Thunk } from "easy-peasy";
-import { getHueApi } from "../Api";
 import { RootStore } from ".";
 import { groupConverter } from "../Models/HueApi";
+import { forEachBridge } from "./Helpers";
 
 export interface GroupStore {
 	// state
@@ -15,7 +15,7 @@ export interface GroupStore {
 	mergeGroups: Action<GroupStore, Dictionary<Group>>;
 
 	// thunks
-	refreshAllGroups: Thunk<GroupStore>;
+	refreshAllGroups: Thunk<GroupStore, undefined, undefined, RootStore>;
 }
 
 export const groupState: GroupStore = {
@@ -34,21 +34,15 @@ export const groupState: GroupStore = {
 	}),
 
 	// thunk implementations
-	refreshAllGroups: thunk(async ({ mergeGroups }, payload, { getStoreState }) => {
-		var rootState = getStoreState() as RootStore;
-
-		const bridge = Object.values(rootState.bridges.all).shift();
-		if (bridge) {
-			const api = getHueApi(bridge);
+	refreshAllGroups: thunk(async ({ mergeGroups }, _, { getStoreState }) => {
+		forEachBridge(getStoreState(), async ({ api, bridgeId }) => {
 			const apiGroups = await api.groups.getAll();
-
-			const groups = Object.fromEntries(
-				Object.entries(apiGroups)
-					.map(([id, group]) => [id, groupConverter.toStoreModel(group, { id: parseInt(id) })])
-			);
-
+			const groups = Object.fromEntries(Object.entries(apiGroups)
+				.map(([groupId, group]) => [
+					bridgeId + ":" + groupId,
+					groupConverter.toStoreModel(group, { bridgeId, groupId })
+				]));
 			mergeGroups(groups);
-		}
-
+		});
 	}),
 }

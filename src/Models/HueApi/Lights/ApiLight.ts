@@ -1,4 +1,3 @@
-import { ModelConverter, NumberIdConvertProps } from "../../ModelConverter";
 import { Light } from "../../Store";
 import { ApiLightState, lightStateConverter } from "./ApiLightState";
 
@@ -16,10 +15,14 @@ export interface ApiLight {
     swversion: string;
 }
 
-export const lightConverter: ModelConverter<ApiLight, Light, NumberIdConvertProps> = {
-    toStoreModel: (apiLight, props) => {
+export const lightConverter = {
+    toStoreModel: (apiLight: ApiLight, props: { bridgeId: string, lightId: string }): Light => {
         return {
-            id: props.id,
+            
+            lightId: props.lightId,
+            bridgeId: props.bridgeId,
+            key: props.bridgeId + ":" + props.lightId,
+
             state: lightStateConverter.toStoreModel(apiLight.state),
             type: apiLight.type,
             name: apiLight.name,
@@ -31,21 +34,7 @@ export const lightConverter: ModelConverter<ApiLight, Light, NumberIdConvertProp
             isProxy: apiLight.proxy,
             isRenderer: apiLight.renderer,
             softwareVersion: apiLight.swversion,
+
         }
     },
-    toApiModel: (light) => {
-        return {
-            state: lightStateConverter.toApiModel(light.state),
-            type: light.type,
-            name: light.name,
-            modelid: light.modelId,
-            uniqueid: light.uniqueId,
-            manufacturername: light.manufacturerName,
-            luminaireuniqueid: light.luminaireUniqueId,
-            streaming: light.isStreaming,
-            proxy: light.isProxy,
-            renderer: light.isRenderer,
-            swversion: light.softwareVersion,
-        }
-    }
 }

@@ -2,9 +2,13 @@ import { GroupType } from "./GroupType";
 import { GroupState } from "./GroupState";
 
 export interface Group {
-    id: number;
+    
+    groupId: string;
+    bridgeId: string;
+    key: string;
+
     name: string;
-    lights: number[];
+    lightKeys: string[];
     type: GroupType,
     state: GroupState;
 }

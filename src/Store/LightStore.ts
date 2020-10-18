@@ -1,21 +1,24 @@
-import { Light } from "../Models";
+import { Light, LightState } from "../Models";
 import { Dictionary, filterDictionary } from "../Helpers";
 import { action, Action, computed, Computed, thunk, Thunk } from "easy-peasy";
 import { getHueApi } from "../Api";
 import { RootStore } from ".";
-import { lightConverter } from "../Models/HueApi";
+import { lightConverter, lightStateConverter } from "../Models/HueApi";
+import { forEachBridge, split } from "./Helpers";
 
 export interface LightStore {
 	// state
 	all: Dictionary<Light>;
-	getById: Computed<LightStore, (id: number) => Light | undefined>;
-	getByIds: Computed<LightStore, (id: readonly number[]) => Dictionary<Light>>;
+	getByKey: Computed<LightStore, (key: string) => Light | undefined, RootStore>;
+	getByKeys: Computed<LightStore, (key: readonly string[]) => Dictionary<Light>, RootStore>;
 
 	// actions
 	mergeLights: Action<LightStore, Dictionary<Light>>;
 
 	// thunks
-	refreshAllLights: Thunk<LightStore>;
+	refreshLight: Thunk<LightStore, { lightKey: string }, undefined, RootStore>;
+	refreshAllLights: Thunk<LightStore, undefined, undefined, RootStore>;
+	changeState: Thunk<LightStore, { key: string, targetState: Partial<LightState> }, undefined, RootStore>;
 }
 
 export const lightState: LightStore = {
@@ -23,8 +26,8 @@ export const lightState: LightStore = {
 	all: {},
 
 	// computed state implementations
-	getById: computed(state => id => state.all[id] ?? void 0),
-	getByIds: computed(state => ids => filterDictionary(state.all, l => ids.indexOf(l.id) >= 0)),
+	getByKey: computed(state => key => state.all[key] ?? void 0),
+	getByKeys: computed(state => keys => filterDictionary(state.all, l => keys.indexOf(l.key) >= 0)),
 
 	// action implementations
 	mergeLights: action((state, lights) => {
@@ -34,21 +37,41 @@ export const lightState: LightStore = {
 	}),
 
 	// thunk implementations
-	refreshAllLights: thunk(async ({ mergeLights }, payload, { getStoreState }) => {
-		var rootState = getStoreState() as RootStore;
-
-		const bridge = Object.values(rootState.bridges.all).shift();
+	refreshLight: thunk(async ({ mergeLights }, { lightKey }, { getStoreState }) => {
+		const rootState = getStoreState();
+		const [bridgeId, lightId] = split(lightKey);
+		const bridge = rootState.bridges.getById(bridgeId);
 		if (bridge) {
 			const api = getHueApi(bridge);
-			const apiLights = await api.lights.getAll();
-
-			const lights = Object.fromEntries(
-				Object.entries(apiLights)
-					.map(([id, light]) => [id, lightConverter.toStoreModel(light, { id: parseInt(id) })])
-			);
-
-			mergeLights(lights);
+			const apiLight = await api.lights.getById(lightId);
+			if (apiLight) {
+				const lights: Dictionary<Light> = {};
+				lights[lightKey] = lightConverter.toStoreModel(apiLight, { bridgeId, lightId });
+				mergeLights(lights);
+			}
 		}
+	}),
 
+	refreshAllLights: thunk(async ({ mergeLights }, _, { getStoreState }) => {
+		forEachBridge(getStoreState(), async ({ api, bridgeId }) => {
+			const apiLights = await api.lights.getAll();
+			const lights = Object.fromEntries(Object.entries(apiLights)
+				.map(([lightId, light]) => [
+					bridgeId + ":" + lightId,
+					lightConverter.toStoreModel(light, { bridgeId, lightId })
+				]));
+			mergeLights(lights);
+		});
+	}),
+
+	changeState: thunk(async (_, { key, targetState }, { getStoreState }) => {
+		var rootState = getStoreState();
+		const [bridgeId, lightId] = split(key);
+
+		const bridge = rootState.bridges.getById(bridgeId);
+		if (bridge) {
+			const api = getHueApi(bridge);
+			await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));
+		}
 	}),
 }
