@@ -17,6 +17,6 @@ export class Brightness {
     }
 
     public toJson(): number {
-        return clamp(this._value * 254, 1, 254);
+        return Math.round(clamp(this._value * 254, 1, 254));
     }
 }

@@ -5,6 +5,7 @@ import { DetailsList, IColumn, SelectionMode, Slider, Toggle } from "@fluentui/r
 import { Light } from "../Models";
 import { LightBlade } from "./LightBlade";
 import { useStoreActions } from "../Store";
+import { LightBrightnessSlider } from "../Components";
 
 export interface LightsBladeProps {
     title?: string;
@@ -35,9 +36,7 @@ export function LightsBlade(props: LightsBladeProps): JSX.Element {
     }
 
     function renderSlider(item: Light) {
-        if (!item.state.brightness)
-            return void 0;
-        return <Slider disabled={item.state.isOn !== true} value={item.state.brightness.value} min={0} max={1} step={0.005} valueFormat={v => `${Math.round(v * 100)}%`} />
+        return <LightBrightnessSlider light={item} />
     }
 
     function openLight(item: Light) {

@@ -11,8 +11,6 @@ export function RoomsBlade(): JSX.Element {
     const rooms = useGroups(GroupType.Room);
     const blade = useBlade();
 
-    console.log({rooms});
-
     const columns: IColumn[] = [
         { key: "state", name: "On", fieldName: "isOn", minWidth: 50, onRender: renderState },
         { key: "name", name: "Name", fieldName: "name", minWidth: 150 },

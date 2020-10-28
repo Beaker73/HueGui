@@ -1,6 +1,7 @@
 import { Blade } from "@beaker73/fluentui-blades";
 import { getTheme, Label, Pivot, PivotItem, Slider, Stack, TextField, Toggle } from "@fluentui/react";
 import React from "react";
+import { LightBrightnessSlider } from "../Components";
 import { useLight } from "../Hooks";
 
 export interface LightBladeProps {
@@ -25,7 +26,7 @@ export function LightBlade(props: LightBladeProps): JSX.Element {
         </Stack>
         {!light?.state.brightness ? void 0 : <>
             <Label>Brightness</Label>
-            <Slider disabled={light?.state.isOn !== true} value={light?.state.brightness?.value} min={0} max={1} step={0.005} valueFormat={v => `${Math.round(v * 100)}%`} />
+            <LightBrightnessSlider light={light} />
         </>}
         <Label>Color</Label>
         <Pivot>
