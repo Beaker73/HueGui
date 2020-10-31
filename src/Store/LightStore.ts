@@ -1,5 +1,5 @@
 import { Light, LightState } from "../Models";
-import { Dictionary, filterDictionary } from "../Helpers";
+import { Dictionary, filter, mapEntries } from "../Helpers";
 import { action, Action, computed, Computed, thunk, Thunk } from "easy-peasy";
 import { getHueApi } from "../Api";
 import { RootStore } from ".";
@@ -14,6 +14,7 @@ export interface LightStore {
 
 	// actions
 	mergeLights: Action<LightStore, Dictionary<Light>>;
+	mergeLight: Action<LightStore, Light>;
 
 	// thunks
 	refreshLight: Thunk<LightStore, { lightKey: string }, undefined, RootStore>;
@@ -27,39 +28,38 @@ export const lightState: LightStore = {
 
 	// computed state implementations
 	getByKey: computed(state => key => state.all[key] ?? void 0),
-	getByKeys: computed(state => keys => filterDictionary(state.all, l => keys.indexOf(l.key) >= 0)),
+	getByKeys: computed(state => keys => filter(state.all, l => keys.indexOf(l.key) >= 0)),
 
 	// action implementations
 	mergeLights: action((state, lights) => {
-		for (const [id, light] of Object.entries(lights)) {
-			state.all[id] = light;
+		for (const [key, light] of Object.entries(lights)) {
+			state.all[key] = light;
 		}
+	}),
+	mergeLight: action((state, light) => {
+		state.all[light.key] = light;
 	}),
 
 	// thunk implementations
-	refreshLight: thunk(async ({ mergeLights }, { lightKey }, { getStoreState }) => {
+	refreshLight: thunk(async ({ mergeLight }, { lightKey }, { getStoreState }) => {
 		const rootState = getStoreState();
 		const [bridgeId, lightId] = split(lightKey);
 		const bridge = rootState.bridges.getById(bridgeId);
 		if (bridge) {
 			const api = getHueApi(bridge);
 			const apiLight = await api.lights.getById(lightId);
-			if (apiLight) {
-				const lights: Dictionary<Light> = {};
-				lights[lightKey] = lightConverter.toStoreModel(apiLight, { bridgeId, lightId });
-				mergeLights(lights);
-			}
+			if (apiLight)
+				mergeLight(lightConverter.toStoreModel(apiLight, { bridgeId, lightId }));
 		}
 	}),
 
 	refreshAllLights: thunk(async ({ mergeLights }, _, { getStoreState }) => {
 		forEachBridge(getStoreState(), async ({ api, bridgeId }) => {
 			const apiLights = await api.lights.getAll();
-			const lights = Object.fromEntries(Object.entries(apiLights)
-				.map(([lightId, light]) => [
-					bridgeId + ":" + lightId,
-					lightConverter.toStoreModel(light, { bridgeId, lightId })
-				]));
+			const lights = mapEntries(apiLights, (lightId, light) => ([
+				bridgeId + ":" + lightId,
+				lightConverter.toStoreModel(light, { bridgeId, lightId })
+			]));
 			mergeLights(lights);
 		});
 	}),
@@ -69,7 +69,6 @@ export const lightState: LightStore = {
 		const [bridgeId, lightId] = split(key);
 
 		const bridge = rootState.bridges.getById(bridgeId);
-		console.log({ bridgeId, lightId, bridge });
 		if (bridge) {
 			const api = getHueApi(bridge);
 			await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));

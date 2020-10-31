@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { StoreProvider } from 'easy-peasy';
-import { initializeIcons, registerIcons } from '@fluentui/react';
+import { initializeIcons, loadTheme, registerIcons } from '@fluentui/react';
 
 import { store } from "./Store";
 import * as serviceWorker from './serviceWorker';
 
 import App from './App';
 import { HueIcon } from './Components/HueIcon';
+import { darkTheme } from './DarkTheme';
 
 
 initializeIcons();
@@ -18,6 +19,8 @@ registerIcons({
 		Bulb: <HueIcon iconName="Bub" />,
 	}
 });
+
+//loadTheme(darkTheme);
 
 ReactDOM.render(
 	<React.StrictMode>

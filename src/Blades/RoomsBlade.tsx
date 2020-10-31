@@ -13,13 +13,13 @@ export function RoomsBlade(): JSX.Element {
 
     const columns: IColumn[] = [
         { key: "state", name: "On", fieldName: "isOn", minWidth: 50, onRender: renderState },
-        { key: "name", name: "Name", fieldName: "name", minWidth: 150 },
+        { key: "name", name: "Name", fieldName: "name", minWidth: 150, isRowHeader: true },
         { key: "lights", name: "Lights", minWidth: 50, onRender: (r: Group) => (<>{r.lightKeys.length}</>) },
     ]
 
     return <Blade title="Rooms">
         <DetailsList items={Object.values(rooms)} columns={columns} selectionMode={SelectionMode.none}
-            onItemInvoked={item => openLightsForGroup(item)} compact
+            onItemInvoked={item => openLightsForGroup(item)}
         />
     </Blade>;
 

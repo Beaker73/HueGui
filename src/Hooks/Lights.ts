@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Dictionary, filterDictionary } from "../Helpers";
+import { Dictionary, filter } from "../Helpers";
 import { Light } from "../Models";
 import { useStoreActions, useStoreState } from "../Store";
 import { useInterval } from "./Browser";
@@ -28,5 +28,5 @@ export function useSpecificLights(lightKeys: string[], refreshInterval?: number)
     const allLights = useAllLights(refreshInterval);
     if (lightKeys.length === 0)
         return allLights;
-    return filterDictionary(allLights, light => lightKeys.indexOf(light.key) >= 0);
+    return filter(allLights, light => lightKeys.indexOf(light.key) >= 0);
 }

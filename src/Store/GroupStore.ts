@@ -1,5 +1,5 @@
 import { Group, GroupType } from "../Models";
-import { Dictionary, filterDictionary } from "../Helpers";
+import { Dictionary, filter } from "../Helpers";
 import { action, Action, computed, Computed, thunk, Thunk } from "easy-peasy";
 import { RootStore } from ".";
 import { groupConverter } from "../Models/HueApi";
@@ -24,7 +24,7 @@ export const groupState: GroupStore = {
 
 	// computed state implementations
 	getById: computed(state => id => state.all[id] ?? void 0),
-	getByType: computed(state => type => type === void 0 ? state.all : filterDictionary(state.all, g => g.type === type)),
+	getByType: computed(state => type => type === void 0 ? state.all : filter(state.all, g => g.type === type)),
 
 	// action implementations
 	mergeGroups: action((state, groups) => {

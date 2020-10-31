@@ -1,5 +1,5 @@
 import React from "react";
-import { Fabric, Stack, mergeStyleSets, getTheme } from "@fluentui/react";
+import { Fabric, Stack, mergeStyleSets, getTheme, Customizer, loadTheme } from "@fluentui/react";
 import { BladeHost, BladeList } from "@beaker73/fluentui-blades";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend"
