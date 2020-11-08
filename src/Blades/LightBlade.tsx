@@ -1,5 +1,5 @@
 import { Blade } from "@beaker73/fluentui-blades";
-import { DefaultButton, getTheme, Label, List, Pivot, PivotItem, PrimaryButton, Slider, Stack, TextField, Toggle } from "@fluentui/react";
+import { getTheme, Label, Pivot, PivotItem, Stack, TextField } from "@fluentui/react";
 import React from "react";
 import { LightBrightnessSlider, LightKelvinSlider, LightOnOffToggle } from "../Components";
 import { ColorButton } from "../Components/ColorButton";

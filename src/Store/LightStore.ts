@@ -74,7 +74,7 @@ export const lightState: LightStore = {
 		const bridge = rootState.bridges.getById(bridgeId);
 		if (bridge) {
 			const api = getHueApi(bridge);
-			const response = await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));
+			await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));
 		}
 	}),
 }

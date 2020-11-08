@@ -3,8 +3,7 @@ import { Slider } from "@fluentui/react";
 
 import { Light } from "../Models/Store";
 import { Brightness } from "../Models/Types";
-import { useLight } from "../Hooks";
-import { useStoreActions, useStoreState } from "../Store";
+import { useStoreActions } from "../Store";
 
 export interface BrightnessSliderProps {
     brightness?: Brightness;

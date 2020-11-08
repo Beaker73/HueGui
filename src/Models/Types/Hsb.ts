@@ -1,5 +1,4 @@
 import { Hue, Saturation, Brightness, Rgb } from ".";
-import { clamp } from "../../Helpers/Math";
 import { Color } from "./Color";
 
 

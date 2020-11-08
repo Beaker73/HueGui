@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
-import { createTheme, Customizer, ISettings, ITheme, Slider } from "@fluentui/react";
+import React from "react";
+import { Slider } from "@fluentui/react";
 
 import { Light } from "../Models/Store";
 import { Kelvin } from "../Models/Types";
-import { useLight } from "../Hooks";
-import { useStoreActions, useStoreState } from "../Store";
+import { useStoreActions } from "../Store";
 
 export interface KelvinSliderProps {
     kelvin?: Kelvin;
