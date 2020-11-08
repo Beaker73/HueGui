@@ -2,6 +2,9 @@ import { clamp } from "../../Helpers/Math"
 
 export class Brightness {
 
+    public static readonly MIN: Brightness = Object.freeze(new Brightness(0)) as Brightness;
+    public static readonly MAX: Brightness = Object.freeze(new Brightness(1)) as Brightness;
+
     private _value: number;
 
     constructor(value: number) {
@@ -10,6 +13,10 @@ export class Brightness {
 
     public get value(): number {
         return this._value;
+    }
+
+    public adjust(adjust: number): Brightness {
+        return new Brightness(clamp(this._value * adjust, 0, 1));
     }
 
     public static fromJson(value: number): Brightness {

@@ -65,13 +65,16 @@ export const lightState: LightStore = {
 	}),
 
 	changeState: thunk(async (_, { key, targetState }, { getStoreState }) => {
+
+		debugger;
+		
 		var rootState = getStoreState();
 		const [bridgeId, lightId] = split(key);
 
 		const bridge = rootState.bridges.getById(bridgeId);
 		if (bridge) {
 			const api = getHueApi(bridge);
-			await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));
+			const response = await api.lights.updateState(lightId, lightStateConverter.toApiModel(targetState));
 		}
 	}),
 }

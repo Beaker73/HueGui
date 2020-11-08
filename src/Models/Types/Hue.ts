@@ -5,6 +5,8 @@ import { clamp } from "../../Helpers/Math";
  */
 export class Hue {
 
+    public static readonly RED: Hue = Object.freeze(new Hue(0)) as Hue;
+
     private _value: number;
 
     constructor(value: number) {
@@ -12,6 +14,10 @@ export class Hue {
     }
 
     public get value(): number { return this._value; }
+
+    public adjust(adjust: number): Hue {
+        return new Hue((this._value + adjust) % 360);
+    }
 
     public static fromJson(value: number): Hue {
         value = clamp(value, 0, 65535);
