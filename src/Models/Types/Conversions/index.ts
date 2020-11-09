@@ -9,7 +9,9 @@ export * from "./k2rgb";
 export * from "./rgb2hsb";
 
 export function toRgb(color: Color): Rgb {
-    if(color instanceof Hsb)
+    if (color instanceof Rgb)
+        return color;
+    if (color instanceof Hsb)
         return hsb2rgb(color);
     if (color instanceof Kelvin)
         return k2rgb(color);
@@ -18,6 +20,10 @@ export function toRgb(color: Color): Rgb {
 }
 
 export function toHsb(color: Color): Hsb {
+    if (color instanceof Hsb)
+        return color;
+    if (color instanceof Rgb)
+        return rgb2hsb(color);
     if (color instanceof Kelvin)
         return rgb2hsb(k2rgb(color));
 
