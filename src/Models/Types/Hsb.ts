@@ -1,4 +1,4 @@
-import { Hue, Saturation, Brightness, Rgb } from ".";
+import { Hue, Saturation, Brightness } from ".";
 import { Color } from "./Color";
 
 

@@ -1,8 +1,6 @@
-import { Hsb } from ".";
 import { clamp } from "../../Helpers";
 import { Color } from "./Color";
-import { k2rgb, toRgb } from "./Conversions";
-import { Rgb } from "./Rgb";
+import { toRgb } from "./Conversions";
 
 export type NamedTemperature = [Kelvin, string];
 

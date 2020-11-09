@@ -1,9 +1,8 @@
 import { rgb2hex } from "@fluentui/react";
-import { Brightness, Hsb, Hue } from ".";
-import { almostEqual, clamp } from "../../Helpers";
+
+import { clamp } from "../../Helpers";
 import { Color } from "./Color";
 import { toHsb, toRgb } from "./Conversions";
-import { Saturation } from "./Saturation";
 
 /**
  * RGB value where R, G and B are between 0 and 1

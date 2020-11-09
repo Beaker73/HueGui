@@ -1,4 +1,4 @@
-import { Color, Kelvin, Rgb } from "..";
+import { Kelvin, Rgb } from "..";
 
 
 // tried all kinds of algorithms for kelvin to rgb conversion

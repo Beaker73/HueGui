@@ -1,5 +1,4 @@
 import { LightState } from "../Store";
-import { Rgb } from "./Rgb";
 
 export interface Color {
     

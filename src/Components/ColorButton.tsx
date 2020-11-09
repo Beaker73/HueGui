@@ -1,7 +1,8 @@
 import React, { PropsWithChildren, useMemo } from "react";
 import { getTheme, mergeStyleSets, Stack, StackItem, Text } from "@fluentui/react";
 
-import { Color, Rgb } from "../Models";
+import { Color } from "../Models";
+import { toHsb, toRgb } from "../Models/Types/Conversions";
 
 export interface ColorButtonProps {
     color: Color;
@@ -43,8 +44,8 @@ export function ColorButton(props: PropsWithChildren<ColorButtonProps>): JSX.Ele
 
     function getStyle() {
 
-        let rgb = props.color.toRgb() ?? Rgb.fromJson(theme.semanticColors.buttonBackground);
-        const hoverRgb = rgb.toHsb().adjustBrightness(0.9).toRgb();
+        let rgb = toRgb(props.color);
+        const hoverRgb = toRgb(toHsb(rgb).adjustBrightness(0.9));
 
         return mergeStyleSets({
             button: {
