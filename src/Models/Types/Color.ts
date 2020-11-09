@@ -6,9 +6,6 @@ export interface Color {
     // Every Color object should be convertable to a display text
     toString(): string;
 
-    // Every Color object should be convertable to RGB
-    toRgb(): Rgb;
-
     // Every Color object should be convertable from and to JSON for persistence
     // static fromJson(jsonObj: any): void;
     toJson(): any;

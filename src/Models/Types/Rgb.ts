@@ -2,6 +2,7 @@ import { rgb2hex } from "@fluentui/react";
 import { Brightness, Hsb, Hue } from ".";
 import { almostEqual, clamp } from "../../Helpers";
 import { Color } from "./Color";
+import { toHsb, toRgb } from "./Conversions";
 import { Saturation } from "./Saturation";
 
 /**
@@ -23,7 +24,7 @@ export class Rgb implements Color {
         amount = clamp(amount, 0, 1);
         const invAmount = 1 - amount;
 
-        const other = color.toRgb();
+        const other = toRgb(color);
 
         let r = gammaBlend(this.red, other.red);
         let g = gammaBlend(this.green, other.green);
@@ -34,62 +35,6 @@ export class Rgb implements Color {
         function gammaBlend(a: number, b: number): number {
             return Math.sqrt((invAmount * a * a) + (amount * b * b));
         }
-    }
-
-    public get hue(): Hue {
-        const r = this.red;
-        const g = this.green;
-        const b = this.blue;
-
-        if (r === g && g === b)
-            return Hue.RED;
-
-        let hue: number;
-        var min = Math.min(r, g, b);
-        var max = Math.max(r, g, b);
-        var delta = max - min;
-
-        if (almostEqual(r, max))
-            hue = (g - b) / delta;
-        else if (almostEqual(g, max))
-            hue = 2 + (b - r) / delta;
-        else
-            hue = 4 + (r - g) / delta;
-
-        hue *= 60;
-        if (hue < 0)
-            hue += 360;
-
-        return new Hue(hue);
-    }
-
-    public get saturation(): Saturation {
-        const r = this.red;
-        const g = this.green;
-        const b = this.blue;
-
-        var min = Math.min(r, g, b);
-        var max = Math.max(r, g, b);
-
-        if (almostEqual(min, max) || almostEqual(max, 0))
-            return Saturation.MIN;
-
-        return new Saturation(1 - ((1 * min) / max));
-    }
-
-    public get brightness(): Brightness {
-        const r = this.red;
-        const g = this.green;
-        const b = this.blue;
-        return new Brightness(Math.max(r, g, b));
-    }
-
-    public toRgb(): Rgb {
-        return this;
-    }
-
-    public toHsb(): Hsb {
-        return new Hsb(this.hue, this.saturation, this.brightness);
     }
 
     public toCss(): string {
@@ -103,8 +48,8 @@ export class Rgb implements Color {
     public toJson() {
         return this.toCss();
     }
-    public toState() {
-        return this.toHsb().toState();
+    public toState(): any {
+        return toHsb(this).toState();
     }
 
     public static fromJson(value: string): Rgb {
